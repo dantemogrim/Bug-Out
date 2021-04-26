@@ -4,6 +4,8 @@ INSERT MANDATORY GIF
 
 Text about the project and which JavaScript library you're using. This would also be a great place to link the game on Netlify.
 
+****
+
 # Installation
 
 Add the installation instructions.
