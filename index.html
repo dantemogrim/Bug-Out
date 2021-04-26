@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+        }
+
+
+    </style>
+</head>
+<body>
+    <script src="pixi.js"></script>
+<script type="text/javascript">
+const canvas = document.getElementById('myCanvas');
+
+// Create 
+const app = new PIXI.Application({
+    width: window.innerWidth,
+    height: window.innerHeight,
+});
+
+document.body.appendChild(app.view);
+
+const texture = PIXI.Texture.from('sprite.png');
+const img = new PIXI.Sprite(texture);
+img.x = app.renderer.width / 2;
+img.y = app.renderer.height / 2;
+app.stage.addChild(img);
+</script>
+</body>
+</html>
