@@ -1,0 +1,19 @@
+# Ignore artifacts:
+build
+coverage
+
+# System and IDE files
+Thumbs.db
+.DS_Store
+.idea
+*.suo
+*.sublime-project
+*.sublime-workspace
+.env
+
+# Vendors
+node_modules/
+
+# Build
+build/
+/npm-debug.log
