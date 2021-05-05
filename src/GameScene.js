@@ -1,4 +1,5 @@
 import Phaser, { Scene } from "phaser";
+import globals from "./globals/index";
 
 class GameScene extends Scene {
   // Our constructor is called when the instance of our class is created.
@@ -29,20 +30,22 @@ class GameScene extends Scene {
 
   // Backdrop + methods.
   create() {
-    const sky = this.add.image(0, 0, "sky");
-    sky.setOrigin(0, 0);
+    // const sky = this.add.image(0, 0, "sky");
+    // sky.setOrigin(0, 0);
 
     this.createPlatforms();
     this.createPlayer();
     this.createCursor();
     this.createStars();
     this.createBombs();
+    this.initGlobalVariables();
+    this.gameStats();
 
     // The text and CSS for our score text.
-    this.scoreText = this.add.text(16, 16, "Score: 0", {
-      fontSize: "32px",
-      fill: "#000",
-    });
+    // this.scoreText = this.add.text(16, 16, "Score: 0", {
+    //   fontSize: "32px",
+    //   fill: "#000",
+    // });
 
     this.gameOverText = this.add.text(400, 300, "Game Over", {
       fontSize: "64px",
@@ -51,6 +54,28 @@ class GameScene extends Scene {
     this.gameOverText.setOrigin(0.5);
     // So it doesn't show while the game is active.
     this.gameOverText.visible = false;
+  }
+
+  initGlobalVariables() {
+    this.game.global = clone(globals);
+  }
+
+  gameStats() {
+    this.createText(20, 20, "left", `score: ${this.game.global.score}`);
+    this.createText(0, 20, "center", `lives: ${this.game.global.lives}`);
+    this.createText(20, 0, "right", `level: ${this.game.global.level}`);
+
+    // this.game.add.text(1, 1, "hello").setTextBounds();
+  }
+
+  createText(xOffset, yOffset, align, text) {
+    return this.game.add
+      .text(xOffset, yOffset, text, {
+        font: "18px Arial",
+        fill: "#000",
+        boundsAlignH: align,
+      })
+      .setTextBounds(0, 0, this.game.world.width, 0);
   }
 
   // staticGroup handles static objects - walls, floors etc.
