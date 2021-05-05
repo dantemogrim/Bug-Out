@@ -2,8 +2,30 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <script src="https://cdn.firebase.com/js/client/2.3.0/firebase.js"></script>
   </head>
   <body>
+    <input id="score" type="string" placeholder="your score" />
+    <input id="btn" type="button" value="click here" onclick="save()" />
+
+    <div id="list"></div>
+    <script>
+      const firebase = new Firebase(
+        "https://levelup-b0b68-default-rtdb.firebaseio.com/"
+      );
+
+      function save() {
+        let newScore = {};
+        newScore.score = document.getElementById("score").value;
+
+        firebase.push(newScore);
+      }
+
+      firebase.on("child_added", function (data) {
+        childScore = data.val();
+        document.getElementById("list").innerHTML += childScore.score + "<br>";
+      });
+    </script>
     <script src="build/project.bundle.js" charset="utf-8"></script>
   </body>
 </html>
