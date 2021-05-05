@@ -4,14 +4,19 @@ import PreloadScene from "./PreloadScene";
 
 const config = {
   type: Phaser.AUTO,
-  parent: "phaser-example",
+  parent: "game",
   width: 800,
   height: 600,
+  backgroundColor: "#76D8FF",
   scene: [PreloadScene, GameScene],
+  scale: {
+    mode: Phaser.Scale.RESIZE,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+  },
   physics: {
     default: "arcade",
     arcade: {
-      gravity: { y: 300 },
+      gravity: false,
       debug: true,
     },
   },
