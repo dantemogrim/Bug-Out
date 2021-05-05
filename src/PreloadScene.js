@@ -8,7 +8,7 @@ class PreloadScene extends Scene {
   preload() {
     this.load.image("logo", "assets/logo.png");
     // Effect.
-    this.load.image("particle", "assets/bug.png");
+    this.load.image("particle", "assets/ball.png");
   }
 
   create() {
@@ -21,11 +21,17 @@ class PreloadScene extends Scene {
 
     this.add.image(400, 300, "logo");
 
-    this.preloadText = this.add.text(400, 100, "Game Menu Title", {
+    this.preloadText = this.add.text(400, 100, "Bug Out", {
       fontSize: "64px",
       fill: "#fff",
     });
     this.preloadText.setOrigin(0.5);
+
+    this.preloadLowerText = this.add.text(400, 500, "Click to start", {
+      fontSize: "24px",
+      fill: "#fff",
+    });
+    this.preloadLowerText.setOrigin(0.5);
 
     // To change scenes - using Phasers own 'event' syntax for mousedown.
     // Here we hand in the key that we've assigned to our scene within the constructor.
