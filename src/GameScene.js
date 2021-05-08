@@ -1,5 +1,5 @@
 import Phaser, { Scene } from "phaser";
-import globals from "./globals/index";
+// import globals from "./globals/index";
 
 class GameScene extends Scene {
   // Our constructor is called when the instance of our class is created.
@@ -28,8 +28,8 @@ class GameScene extends Scene {
     this.createBall();
     this.createBrick();
     this.createPaddle();
-    this.initGlobalVariables();
-    this.gameStats();
+    // this.initGlobalVariables();
+    // this.gameStats();
 
     this.gameOverText = this.add.text(400, 300, "Game Over", {
       fontSize: "64px",
@@ -40,17 +40,17 @@ class GameScene extends Scene {
     this.gameOverText.visible = false;
   }
 
-  initGlobalVariables() {
-    this.game.global = clone(globals);
-  }
+  // initGlobalVariables() {
+  //   this.game.global = clone(globals);
+  // }
 
-  gameStats() {
-    this.createText(20, 20, "left", `score: ${this.game.global.score}`);
-    this.createText(0, 20, "center", `lives: ${this.game.global.lives}`);
-    this.createText(20, 0, "right", `level: ${this.game.global.level}`);
+  // gameStats() {
+  //   this.createText(20, 20, "left", `score: ${this.game.global.score}`);
+  //   this.createText(0, 20, "center", `lives: ${this.game.global.lives}`);
+  //   this.createText(20, 0, "right", `level: ${this.game.global.level}`);
 
-    // this.game.add.text(1, 1, "hello").setTextBounds();
-  }
+  //   // this.game.add.text(1, 1, "hello").setTextBounds();
+  // }
 
   createText(xOffset, yOffset, align, text) {
     return this.game.add
@@ -210,9 +210,9 @@ class GameScene extends Scene {
   // Our keyboard settings.
   update() {
     if (this.cursors.left.isDown) {
-      this.paddle.setVelocityX(-350);
+      this.paddle.setVelocityX(-500);
     } else if (this.cursors.right.isDown) {
-      this.paddle.setVelocityX(350);
+      this.paddle.setVelocityX(500);
     } else {
       this.paddle.setVelocityX(0);
     }
