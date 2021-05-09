@@ -1,11 +1,17 @@
+"use strict";
+
 import Phaser, { Scene } from "phaser";
-import globals from "./globals/index";
+// import globals from "./globals/index";
 
 class GameScene extends Scene {
   // Our constructor is called when the instance of our class is created.
   constructor() {
     super("game"); //  super({ key: "game" });
 
+    // this.game = new Phaser.Game(); NO
+    // let x = canvas.width/2;
+    // let y = canvas.height/2;
+    this.gameStart = false;
     this.gameOver = false;
   }
 
@@ -17,19 +23,18 @@ class GameScene extends Scene {
   }
 
   create() {
+    this.cameras.main.fadeIn(500);
     // const sky = this.add.image(0, 0, "sky");
     // sky.setOrigin(0, 0);
 
-    // this.createPlatforms();
-    // this.createPlayer();
     this.createCursor();
     // this.createStars();
     // this.createBombs();
     this.createBall();
-    this.createBrick();
+    this.configBrick();
     this.createPaddle();
-    this.initGlobalVariables();
-    this.gameStats();
+    // this.initGlobalVariables();
+    // this.gameStats();
 
     this.gameOverText = this.add.text(400, 300, "Game Over", {
       fontSize: "64px",
@@ -40,17 +45,17 @@ class GameScene extends Scene {
     this.gameOverText.visible = false;
   }
 
-  initGlobalVariables() {
-    this.game.global = clone(globals);
-  }
+  // initGlobalVariables() {
+  //   this.game.global = clone(globals);
+  // }
 
-  gameStats() {
-    this.createText(20, 20, "left", `score: ${this.game.global.score}`);
-    this.createText(0, 20, "center", `lives: ${this.game.global.lives}`);
-    this.createText(20, 0, "right", `level: ${this.game.global.level}`);
+  // gameStats() {
+  //   this.createText(20, 20, "left", `score: ${this.game.global.score}`);
+  //   this.createText(0, 20, "center", `lives: ${this.game.global.lives}`);
+  //   this.createText(20, 0, "right", `level: ${this.game.global.level}`);
 
-    // this.game.add.text(1, 1, "hello").setTextBounds();
-  }
+  //   // this.game.add.text(1, 1, "hello").setTextBounds();
+  // }
 
   createText(xOffset, yOffset, align, text) {
     return this.game.add
@@ -65,15 +70,28 @@ class GameScene extends Scene {
   createBall() {
     this.ball = this.physics.add.image(400, 500, "ball");
     this.ball.setCollideWorldBounds(true);
+    this.ball.setBounce(/* Velocity: */ 1, /* Multiplied by: */ 1);
+    // this.ball.immovable = true;
+
+    // Make the ball fall through the lower part of the screen.
+    this.physics.world.checkCollision.down = false;
+
+    //   // Make them, like our player, be bound by our static objects.
+    //   this.physics.add.collider(this.stars, this.platforms);
+    //   // Overlap means that our first two parameters are our objects.
+    //   // The third parameter is the instruction that we want them to do.
+    //   this.physics.add.overlap(
+    //     this.player,
+    //     this.stars,
+    //     this.collectStar,
+    //     null,
+    //     this
+    //   );
   }
 
-  // staticGroup handles static objects - walls, floors etc.
   // createPlatforms() {
   //   this.platforms = this.physics.add.staticGroup();
   //   this.platforms.create(400, 568, "ground").setScale(2).refreshBody();
-  //   this.platforms.create(600, 400, "ground");
-  //   this.platforms.create(50, 250, "ground");
-  //   this.platforms.create(750, 220, "ground");
   // }
 
   // Physics objects are able to move!
@@ -81,8 +99,6 @@ class GameScene extends Scene {
   //   this.player = this.physics.add.sprite(100, 450, "dude");
   //   this.player.setBounce(0.2);
 
-  //   // Let the player be bound to the world width + height that we've set.
-  //   this.player.setCollideWorldBounds(true);
   //   // Look for collisions between the player object and the platform.
   //   this.physics.add.collider(this.player, this.platforms);
 
@@ -91,32 +107,98 @@ class GameScene extends Scene {
   }
 
   createPaddle() {
-    this.paddle = this.physics.add.sprite(400, 530, "paddle");
+    this.paddle = this.physics.add.image(400, 530, "paddle");
     this.paddle.setCollideWorldBounds(true);
+    this.paddle.setImmovable(true);
+
+    this.physics.add.collider(
+      this.ball,
+      this.paddle,
+      this.ballHitPaddle,
+      null,
+      this
+    );
+  }
+
+  ballHitPaddle(ball, paddle) {
+    console.log("Paddle has been hit!");
+    let diff = 0;
+
+    if (ball.x < paddle.x) {
+      diff = paddle.x - ball.x;
+      ball.body.velocity.x = -10 * diff;
+      return;
+    }
+
+    if (ball.x > paddle.x) {
+      diff = ball.x - paddle.x;
+      ball.body.velocity.x = 10 * diff;
+      return;
+    }
+  }
+
+  configBrick() {
+    this.brick = this.physics.add.group();
+    this.createBrick(this.brick);
   }
 
   createBrick() {
-    this.brick = this.physics.add.group({
-      key: "brick",
-      repeat: 9, // Quantity.
-      setXY: { x: 80, y: 100, stepX: 70 },
-    });
+    // Dynamic grid settings.
+    let brickSize = 80;
+    let numRows = 3;
+    let numCols = 8;
+    let brickSpacing = 4;
 
-    this.brick = this.physics.add.group({
-      key: "brick",
-      repeat: 9, // Quantity.
-      setXY: { x: 80, y: 150, stepX: 70 },
-    });
+    let leftSpace = (800 - numCols * brickSize - numCols * brickSpacing) / 1.2;
 
-    this.brick = this.physics.add.group({
-      key: "brick",
-      repeat: 9, // Quantity.
-      setXY: { x: 80, y: 200, stepX: 70 },
-    });
+    let topSpace =
+      (600 - numRows * brickSize - (numRows - 1) * brickSpacing) / 3;
+
+    for (let i = 0; i < numCols; i++) {
+      for (let j = 0; j < numRows; j++) {
+        this.brick.create(
+          leftSpace + i * (brickSize + brickSpacing),
+          topSpace + j * (brickSize + brickSpacing),
+          "brick"
+        );
+      }
+    }
+
+    this.physics.add.collider(
+      this.ball,
+      this.brick,
+      this.ballHitBrick,
+      null,
+      this
+    );
+
+    //this.brick.enableBody = true;
+    //   this.platforms = this.physics.add.staticGroup();
+    //   this.platforms.create(400, 568, "ground").setScale(2).refreshBody();
+    //   this.platforms.create(400, 568, "ground").setScale(2).refreshBody()
+    //
   }
 
-  // -----------------------------------
-  // Create stars.
+  ballHitBrick(ball, brick) {
+    console.log("Brick is destroyed!");
+    brick.disableBody(true, true);
+
+    let diff = 0;
+
+    let randomNum = Math.random();
+
+    if (ball.x < brick.x) {
+      diff = brick.x - ball.x;
+      ball.body.velocity.x = -10 * diff;
+      return;
+    }
+
+    if (ball.y > brick.y) {
+      diff = ball.y - brick.y;
+      ball.body.velocity.y = 10 * diff;
+      return;
+    }
+  }
 
   // createStars() {
   //   this.stars = this.physics.add.group({
@@ -157,6 +239,8 @@ class GameScene extends Scene {
   //     this.stars.children.iterate((child) => {
   //       child.enableBody(true, child.x, 0, true, true);
   //     });
+  //   this.level += 1;
+  //   this.levelText.setText(`level: ${this.level}`);
 
   //     const x =
   //       this.player.x < 400
@@ -207,14 +291,27 @@ class GameScene extends Scene {
   //   this.input.on("pointerdown", () => this.scene.start("preload"));
   // }
 
-  // Our keyboard settings.
   update() {
+    // Paddle keys.
     if (this.cursors.left.isDown) {
-      this.paddle.setVelocityX(-350);
+      this.paddle.setVelocityX(-500);
     } else if (this.cursors.right.isDown) {
-      this.paddle.setVelocityX(350);
+      this.paddle.setVelocityX(500);
     } else {
       this.paddle.setVelocityX(0);
+    }
+
+    // Binds the ball on top of paddles position during prestart.
+    if (this.gameStart === false) {
+      this.ball.setX(this.paddle.x);
+    }
+
+    // Balls velocity on impact.
+
+    // Release ball from paddle on space press.
+    if (this.cursors.space.isDown) {
+      this.gameStart = true;
+      this.ball.setVelocityY(-200);
     }
   }
 }
