@@ -13,6 +13,7 @@ class PreloadScene extends Scene {
 
   create() {
     // Effect playground.
+
     const p = this.add.particles("particle");
     const e = p.createEmitter();
     e.setPosition(400, 300);
@@ -21,13 +22,18 @@ class PreloadScene extends Scene {
 
     this.add.image(400, 300, "logo");
 
-    this.preloadText = this.add.text(400, 100, "Bug Out", {
-      fontSize: "64px",
-      fill: "#fff",
-    });
+    this.preloadText = this.add.text(
+      400,
+      100,
+      "Aseel Mohamad & Dante Mogrim present..",
+      {
+        fontSize: "16px",
+        fill: "#fff",
+      }
+    );
     this.preloadText.setOrigin(0.5);
 
-    this.preloadLowerText = this.add.text(400, 500, "Click to start", {
+    this.preloadLowerText = this.add.text(400, 500, "Click to start.", {
       fontSize: "24px",
       fill: "#fff",
     });
