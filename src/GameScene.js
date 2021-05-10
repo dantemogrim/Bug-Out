@@ -9,9 +9,6 @@ class GameScene extends Scene {
   constructor() {
     super("game"); //  super({ key: "game" });
 
-    // this.game = new Phaser.Game(); NO
-    // let x = canvas.width/2;
-    // let y = canvas.height/2;
     this.gameStart = false;
     this.gameOver = false;
   }
@@ -48,6 +45,13 @@ class GameScene extends Scene {
     this.gameOverText.setOrigin(0.5);
     // So it doesn't show while the game is active.
     this.gameOverText.visible = false;
+
+    if (globals.lives === 0) {
+      this.physics.pause();
+      this.gameOver = true;
+      this.gameOverText.visible = true;
+      this.input.on("pointerdown", () => this.scene.start("gameOver"));
+    }
   }
 
   initGlobalVariables() {
