@@ -1,7 +1,8 @@
 "use strict";
 
 import Phaser, { Scene } from "phaser";
-// import globals from "./globals/index";
+import globals from "./globals/index";
+import { clone } from "lodash";
 
 class GameScene extends Scene {
   // Our constructor is called when the instance of our class is created.
@@ -23,6 +24,10 @@ class GameScene extends Scene {
   }
 
   create() {
+    this.add.text(20, 20, `score: ${globals.score}`);
+    this.add.text(300, 20, `level: ${globals.level}`);
+    this.add.text(660, 20, `lives: ${globals.lives}`);
+
     this.cameras.main.fadeIn(500);
     // const sky = this.add.image(0, 0, "sky");
     // sky.setOrigin(0, 0);
@@ -33,7 +38,7 @@ class GameScene extends Scene {
     this.createBall();
     this.configBrick();
     this.createPaddle();
-    // this.initGlobalVariables();
+    this.initGlobalVariables();
     // this.gameStats();
 
     this.gameOverText = this.add.text(400, 300, "Game Over", {
@@ -45,33 +50,46 @@ class GameScene extends Scene {
     this.gameOverText.visible = false;
   }
 
-  // initGlobalVariables() {
-  //   this.game.global = clone(globals);
-  // }
+  initGlobalVariables() {
+    this.globals = clone(globals);
+    //this.global = [];
 
-  // gameStats() {
-  //   this.createText(20, 20, "left", `score: ${this.game.global.score}`);
-  //   this.createText(0, 20, "center", `lives: ${this.game.global.lives}`);
-  //   this.createText(20, 0, "right", `level: ${this.game.global.level}`);
+    console.log(this.globals);
+  }
+
+  // this.preloadLowerText = this.add.text(400, 500, "Click to start.", {
+  //   fontSize: "24px",
+  //   fill: "#fff",
+  // });
+  // this.preloadLowerText.setOrigin(0.5);
+
+  // gameStats(globals, score) {
+  //   //console.log(globals);
+
+  //   console.log(globals);
+
+  //   this.add.text(20, 20, `score: ${globals.score}`);
+
+  //   // this.add.text(300, 20, `level: ${this.level}`);
+  //   // this.add.text(660, 20, `lives: ${this.lives}`);
 
   //   // this.game.add.text(1, 1, "hello").setTextBounds();
   // }
 
-  createText(xOffset, yOffset, align, text) {
-    return this.game.add
-      .text(xOffset, yOffset, text, {
-        font: "18px Arial",
-        fill: "#000",
-        boundsAlignH: align,
-      })
-      .setTextBounds(0, 0, this.game.world.width, 0);
-  }
+  // createText(xOffset, yOffset, align, text) {
+  //   return this.game.add
+  //     .text(xOffset, yOffset, text, {
+  //       font: "18px Arial",
+  //       fill: "#000",
+  //       boundsAlignH: align,
+  //     })
+  //     .setTextBounds(0, 0, this.width, 0);
+  // }
 
   createBall() {
     this.ball = this.physics.add.image(400, 500, "ball");
     this.ball.setCollideWorldBounds(true);
     this.ball.setBounce(/* Velocity: */ 1, /* Multiplied by: */ 1);
-    // this.ball.immovable = true;
 
     // Make the ball fall through the lower part of the screen.
     this.physics.world.checkCollision.down = false;

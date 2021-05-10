@@ -8,7 +8,7 @@ const config = {
   width: 800,
   height: 600,
   backgroundColor: "#94b5c0",
-  scene: [/*PreloadScene, */ GameScene],
+  scene: [PreloadScene, GameScene],
   physics: {
     default: "arcade",
     arcade: {
