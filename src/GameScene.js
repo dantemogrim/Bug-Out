@@ -6,7 +6,7 @@ import { clone } from "lodash";
 
 class GameScene extends Scene {
   // Our constructor is called when the instance of our class is created.
-  constructor() {
+  constructor(game, x, y) {
     super("game"); //  super({ key: "game" });
 
     this.gameStart = false;
@@ -21,61 +21,42 @@ class GameScene extends Scene {
   }
 
   create() {
-    this.add.text(20, 20, `score: ${globals.score}`);
-    this.add.text(300, 20, `level: ${globals.level}`);
-    this.add.text(660, 20, `lives: ${globals.lives}`);
+    this.scoreText = this.add.text(20, 10, `score: ${globals.score}`);
+    this.add.text(350, 10, `level: ${globals.level}`);
+    this.livesText = this.add.text(660, 10, `lives: ${globals.lives}`);
 
     this.cameras.main.fadeIn(500);
-    // const sky = this.add.image(0, 0, "sky");
-    // sky.setOrigin(0, 0);
 
     this.createCursor();
-    // this.createStars();
-    // this.createBombs();
     this.createBall();
+    this.runawayBall();
     this.configBrick();
     this.createPaddle();
     this.initGlobalVariables();
     // this.gameStats();
+    this.levelUp();
+    this.outOfLives();
 
     this.gameOverText = this.add.text(400, 300, "Game Over", {
       fontSize: "64px",
       fill: "#000",
     });
     this.gameOverText.setOrigin(0.5);
+
     // So it doesn't show while the game is active.
     this.gameOverText.visible = false;
-
-    if (globals.lives === 0) {
-      this.physics.pause();
-      this.gameOver = true;
-      this.gameOverText.visible = true;
-      this.input.on("pointerdown", () => this.scene.start("gameOver"));
-    }
   }
 
   initGlobalVariables() {
     this.globals = clone(globals);
-    //this.global = [];
 
     console.log(this.globals);
   }
-
-  // this.preloadLowerText = this.add.text(400, 500, "Click to start.", {
-  //   fontSize: "24px",
-  //   fill: "#fff",
-  // });
-  // this.preloadLowerText.setOrigin(0.5);
 
   // gameStats(globals, score) {
   //   //console.log(globals);
 
   //   console.log(globals);
-
-  //   this.add.text(20, 20, `score: ${globals.score}`);
-
-  //   // this.add.text(300, 20, `level: ${this.level}`);
-  //   // this.add.text(660, 20, `lives: ${this.lives}`);
 
   //   // this.game.add.text(1, 1, "hello").setTextBounds();
   // }
@@ -109,6 +90,10 @@ class GameScene extends Scene {
     //     null,
     //     this
     //   );
+  }
+
+  runawayBall() {
+    //
   }
 
   // createPlatforms() {
@@ -204,22 +189,9 @@ class GameScene extends Scene {
   ballHitBrick(ball, brick) {
     console.log("Brick is destroyed!");
     brick.disableBody(true, true);
+    this.scoreText += 1;
 
-    let diff = 0;
-
-    let randomNum = Math.random();
-
-    if (ball.x < brick.x) {
-      diff = brick.x - ball.x;
-      ball.body.velocity.x = -10 * diff;
-      return;
-    }
-
-    if (ball.y > brick.y) {
-      diff = ball.y - brick.y;
-      ball.body.velocity.y = 10 * diff;
-      return;
-    }
+    ball.setVelocity(150, 150);
   }
 
   // createStars() {
@@ -296,9 +268,6 @@ class GameScene extends Scene {
   //   );
   // }
 
-  // -----------------------------------
-  // Hit by bomb.
-
   // hitBomb(player, bomb) {
   //   // If the player is hit, the game will pause.
   //   this.physics.pause();
@@ -313,27 +282,65 @@ class GameScene extends Scene {
   //   this.input.on("pointerdown", () => this.scene.start("preload"));
   // }
 
+  levelUp() {
+    //
+    let brickTotal = this.brick.countActive();
+    // if (brickTotal === 0)
+    if (brickTotal === 22) {
+      return true;
+    }
+    // Increment Level & reset all bricks - change bg color/ make paddle smaller / increase velocity.
+  }
+
+  outOfLives() {
+    if (globals.lives === 0) {
+      this.physics.pause();
+      this.gameOver = true;
+      this.gameOverText.visible = true;
+      this.input.on("pointerdown", () => this.scene.start("gameOver"));
+    }
+    //
+  }
+
   update() {
-    // Paddle keys.
-    if (this.cursors.left.isDown) {
-      this.paddle.setVelocityX(-500);
-    } else if (this.cursors.right.isDown) {
-      this.paddle.setVelocityX(500);
+    // console.log(this.ball.y);
+    if (this.outOfLives(this.physics.world) === true) {
+    } else if (this.levelUp() === true) {
+      // Increment level and reset tiles etc.
     } else {
-      this.paddle.setVelocityX(0);
-    }
+      if (this.ball.y > 600) {
+        console.log("Out of bounds!");
+        // Decrement globals.lives by 1.
 
-    // Binds the ball on top of paddles position during prestart.
-    if (this.gameStart === false) {
-      this.ball.setX(this.paddle.x);
-    }
+        globals.lives -= 1;
+        console.log(globals.lives);
+        let livesText = this.livesText.setText(`Lives: ${globals.lives}`);
+      }
 
-    // Balls velocity on impact.
+      // Paddle keys.
+      if (this.cursors.left.isDown) {
+        this.paddle.setVelocityX(-500);
+      } else if (this.cursors.right.isDown) {
+        this.paddle.setVelocityX(500);
+      } else {
+        this.paddle.setVelocityX(0);
+      }
 
-    // Release ball from paddle on space press.
-    if (this.cursors.space.isDown) {
-      this.gameStart = true;
-      this.ball.setVelocityY(-200);
+      // Binds the ball on top of paddles position during prestart.
+      if (this.gameStart === false) {
+        this.ball.setX(this.paddle.x);
+      }
+
+      // Balls velocity on impact.
+
+      // Release ball from paddle on space press.
+      if (this.cursors.space.isDown) {
+        this.gameStart = true;
+        this.ball.setVelocityY(-200);
+        this.ball.setAngularVelocity(-50);
+      }
+
+      // End of curly brace from the start - meant for game over / level up etc.
     }
   }
 }
