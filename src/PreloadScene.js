@@ -43,6 +43,8 @@ class PreloadScene extends Scene {
     // Here we hand in the key that we've assigned to our scene within the constructor.
     this.input.on("pointerdown", () => this.scene.start("game"));
   }
+
+  update() {}
 }
 
 export default PreloadScene;
