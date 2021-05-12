@@ -1,16 +1,20 @@
 "use strict";
 
-import Phaser, { Scene } from "phaser";
-import globals from "./globals/index";
-import { clone } from "lodash";
+import { Scene } from "phaser";
+// import globals from "./globals/index";
+// import { clone } from "lodash";
 
 class GameScene extends Scene {
   // Our constructor is called when the instance of our class is created.
   constructor(game, x, y) {
     super("game"); //  super({ key: "game" });
 
-    this.gameStart = false;
     this.gameOver = false;
+    this.gameStart = false;
+
+    this.level = 1;
+    this.lives = 5;
+    this.score = 0;
   }
 
   preload() {
@@ -21,37 +25,42 @@ class GameScene extends Scene {
   }
 
   create() {
-    this.scoreText = this.add.text(20, 10, `score: ${globals.score}`);
-    this.add.text(350, 10, `level: ${globals.level}`);
-    this.livesText = this.add.text(660, 10, `lives: ${globals.lives}`);
+    this.scoreText = this.add.text(20, 10, `Score: ${this.score}`);
+    this.levelText = this.add.text(350, 10, `Level: ${this.level}`);
+    this.livesText = this.add.text(660, 10, `Lives: ${this.lives}`);
 
     this.cameras.main.fadeIn(500);
 
     this.createCursor();
     this.createBall();
-    this.runawayBall();
+    this.ballExitScreen();
     this.configBrick();
     this.createPaddle();
-    this.initGlobalVariables();
+    // this.initGlobalVariables();
     // this.gameStats();
     this.levelUp();
     this.outOfLives();
 
-    this.gameOverText = this.add.text(400, 300, "Game Over", {
-      fontSize: "64px",
-      fill: "#000",
-    });
+    this.gameOverText = this.add.text(
+      400,
+      400,
+      "Out of lives! ಥ_ಥ\nTo continue, press X.",
+      {
+        fontSize: "30px",
+        fill: "#ff0000",
+      }
+    );
     this.gameOverText.setOrigin(0.5);
 
-    // So it doesn't show while the game is active.
     this.gameOverText.visible = false;
+    // So it doesn't show while the game is active.
   }
 
-  initGlobalVariables() {
-    this.globals = clone(globals);
+  // initGlobalVariables() {
+  //   this.globals = clone(globals);
 
-    console.log(this.globals);
-  }
+  //   console.log(this.globals);
+  // }
 
   // gameStats(globals, score) {
   //   //console.log(globals);
@@ -71,7 +80,7 @@ class GameScene extends Scene {
   //     .setTextBounds(0, 0, this.width, 0);
   // }
 
-  createBall() {
+  createBall(ball, handler) {
     this.ball = this.physics.add.image(400, 500, "ball");
     this.ball.setCollideWorldBounds(true);
     this.ball.setBounce(/* Velocity: */ 1, /* Multiplied by: */ 1);
@@ -92,8 +101,15 @@ class GameScene extends Scene {
     //   );
   }
 
-  runawayBall() {
-    //
+  ballExitScreen() {
+    // if () {
+    //   console.log("Out of bounds");
+    // }
+    //   // Decrement globals.lives by 1.
+    //   //   globals.lives -= 1;
+    //   //   console.log(globals.lives);
+    //   //   let livesText = this.livesText.setText(`Lives: ${globals.lives}`);
+    // }
   }
 
   // createPlatforms() {
@@ -189,8 +205,8 @@ class GameScene extends Scene {
   ballHitBrick(ball, brick) {
     console.log("Brick is destroyed!");
     brick.disableBody(true, true);
-    this.scoreText += 1;
-
+    this.score += 1;
+    this.scoreText.setText(`Score: ${this.score}`);
     ball.setVelocity(150, 150);
   }
 
@@ -284,39 +300,62 @@ class GameScene extends Scene {
 
   levelUp() {
     //
-    let brickTotal = this.brick.countActive();
-    // if (brickTotal === 0)
-    if (brickTotal === 22) {
-      return true;
+    // let brickTotal = this.brick.countActive();
+    // // if (brickTotal === 0)
+    // if (brickTotal === 22) {
+    //   return true;
+    // }
+
+    if (this.brick.countActive(true) === 0) {
+      // this.brick.children.iterate((child) => {
+      //   child.enableBody(true, child.x, 0, true, true);
+      // });
+
+      this.createBrick();
+
+      this.level += 1;
+      this.levelText.setText(`Level: ${this.level}`);
     }
+
+    // If there are no stars left - we will loop over the same sequence again.
+    //   if (this.stars.countActive(true) === 0) {
+    //     this.stars.children.iterate((child) => {
+    //       child.enableBody(true, child.x, 0, true, true);
+    //     });
+    //   this.level += 1;
+    //   this.levelText.setText(`level: ${this.level}`);
+
     // Increment Level & reset all bricks - change bg color/ make paddle smaller / increase velocity.
   }
 
   outOfLives() {
-    if (globals.lives === 0) {
+    if (this.lives === 0) {
       this.physics.pause();
       this.gameOver = true;
       this.gameOverText.visible = true;
+      this.score = 0;
+      this.lives = 5;
+      this.level = 1;
       this.input.on("pointerdown", () => this.scene.start("gameOver"));
     }
     //
   }
 
   update() {
-    // console.log(this.ball.y);
+    // Lose life.
+    if (this.ball.y > 600) {
+      console.log("It is out there!!!!");
+      this.lives -= 1;
+      console.log(this.lives);
+      let livesText = this.livesText.setText(`Lives: ${this.lives}`);
+      this.ball.body.reset(this.paddle.x, 500);
+      // this.gameStart === false;
+    }
+
     if (this.outOfLives(this.physics.world) === true) {
     } else if (this.levelUp() === true) {
       // Increment level and reset tiles etc.
     } else {
-      if (this.ball.y > 600) {
-        console.log("Out of bounds!");
-        // Decrement globals.lives by 1.
-
-        globals.lives -= 1;
-        console.log(globals.lives);
-        let livesText = this.livesText.setText(`Lives: ${globals.lives}`);
-      }
-
       // Paddle keys.
       if (this.cursors.left.isDown) {
         this.paddle.setVelocityX(-500);
