@@ -3,6 +3,7 @@ import GameScene from './GameScene';
 import PreloadScene from './PreloadScene';
 import GameOverScene from './GameOverScene';
 import ControlsScene from './ControlsScene';
+import LeaderboardScene from './LeaderboardScene';
 
 const config = {
 	width: 800,
@@ -10,7 +11,13 @@ const config = {
 	type: Phaser.AUTO,
 	parent: 'game',
 	backgroundColor: '#fff',
-	scene: [PreloadScene, ControlsScene, GameScene, GameOverScene],
+	scene: [
+		PreloadScene,
+		ControlsScene,
+		LeaderboardScene,
+		GameScene,
+		GameOverScene,
+	],
 	physics: {
 		default: 'arcade',
 		arcade: {

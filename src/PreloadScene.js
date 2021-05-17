@@ -89,7 +89,7 @@ class PreloadScene extends Scene {
 
 		this.audioText
 			.setInteractive({ useHandCursor: true })
-			.on('pointerdown', () => this.scene.start('controls'));
+			.on('pointerdown', () => this.scene.start('leaderboardScene'));
 	}
 
 	update() {
