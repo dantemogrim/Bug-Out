@@ -1,6 +1,13 @@
+@font-face {
+	font-family: 'toshiba';
+	src: url('/assets/toshiba.ttf');
+	font-weight: 400;
+	font-weight: normal;
+}
+
 body {
-  align-items: center;
-  display: flex;
-  flex-direction: column-reverse;
-  justify-content: center;
+	align-items: center;
+	display: flex;
+	flex-direction: column-reverse;
+	justify-content: center;
 }
