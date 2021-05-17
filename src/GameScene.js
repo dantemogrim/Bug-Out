@@ -1,6 +1,8 @@
 'use strict';
 
 import Phaser, { Scene } from 'phaser';
+// import { saveScoreInDatabase } from './firebase.js';
+import Ball from './components/Ball';
 
 class GameScene extends Scene {
 	constructor() {
@@ -15,10 +17,11 @@ class GameScene extends Scene {
 		this.level = 1;
 		this.lives = 5;
 		this.score = 0;
+		this.ball = new Ball(this);
 	}
 
 	preload() {
-		this.load.image('ball', 'assets/ball.png');
+		this.ball.preload();
 		this.load.image('pauseButton', 'assets/button.png');
 		this.load.image('muteButton', 'assets/button.png');
 		this.load.image('brick', 'assets/brick.png');
@@ -44,7 +47,8 @@ class GameScene extends Scene {
 		this.createCursor();
 
 		this.ballExitScreen();
-		this.createBall();
+		this.ball.create();
+		this.firebase();
 
 		this.configBrick();
 
@@ -84,7 +88,7 @@ class GameScene extends Scene {
 
 		// BALL + PADDLE
 		this.physics.add.collider(
-			this.ball,
+			this.ball.object,
 			this.paddle,
 			this.ballHitPaddle,
 			null,
@@ -93,7 +97,7 @@ class GameScene extends Scene {
 
 		// BALL + BRICK
 		this.physics.add.collider(
-			this.ball,
+			this.ball.object,
 			this.brick,
 			this.ballHitBrick,
 			null,
@@ -116,13 +120,8 @@ class GameScene extends Scene {
 		this.gameOverText.visible = false;
 	}
 
-	createBall() {
-		this.ball = this.physics.add.image(400, 500, 'ball').setScale(1.5);
-		this.ball.setCollideWorldBounds(true);
-		this.ball.setBounce(/* Velocity: */ 1, /* Multiplied by: */ 1);
-
-		// Make the ball fall through the lower part of the screen.
-		this.physics.world.checkCollision.down = false;
+	firebase() {
+		//
 	}
 
 	createSideBars() {
@@ -254,7 +253,7 @@ class GameScene extends Scene {
 
 	ballHitBrick(ball, brick) {
 		this.explosion = this.physics.add
-			.sprite(this.ball.x, this.ball.y, 'explosion')
+			.sprite(this.ball.object.x, this.ball.object.y, 'explosion')
 			.setScale(1.5);
 
 		this.anims.create({
@@ -288,6 +287,8 @@ class GameScene extends Scene {
 		if (this.lives === 0) {
 			this.physics.pause();
 			this.gameOver = true;
+			let finalScore = this.score;
+			// GET SCORE DATA + LEVELS + PLAYER NAME / IMPORT FUNCTION FIREBASE
 			this.gameOverText.visible = true;
 			this.score = 0;
 			this.lives = 5;
@@ -298,12 +299,12 @@ class GameScene extends Scene {
 
 	update() {
 		// Lose life.
-		if (this.ball.y > 600) {
+		if (this.ball.object.y > 600) {
 			console.log('It is out there!!!!');
 			this.lives -= 1;
 			console.log(this.lives);
 			this.livesText.setText(`LIVES: ${this.lives}`);
-			this.ball.body.reset(this.paddle.x, 500);
+			this.ball.object.body.reset(this.paddle.x, 500);
 		}
 
 		if (this.outOfLives(this.physics.world) === true) {
@@ -326,14 +327,14 @@ class GameScene extends Scene {
 
 			// Binds the ball on top of paddles position during prestart.
 			if (this.gameStart === false) {
-				this.ball.setX(this.paddle.x);
+				this.ball.object.setX(this.paddle.x);
 			}
 
 			// Release ball from paddle on space press.
 			if (this.cursors.space.isDown) {
 				this.gameStart = true;
-				this.ball.setVelocityY(-200);
-				this.ball.setAngularVelocity(-50);
+				this.ball.object.setVelocityY(-200);
+				this.ball.object.setAngularVelocity(-50);
 			}
 
 			// End of curly brace from the start - meant for game over / level up etc.

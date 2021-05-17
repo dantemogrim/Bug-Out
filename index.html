@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<script src="https://cdn.firebase.com/js/client/2.3.0/firebase.js"></script>
+		<!-- <script src="https://cdn.firebase.com/js/client/2.3.0/firebase.js"></script> -->
 		<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
 		<!-- Primary Meta Tags -->
 		<title>Bug Out</title>
@@ -39,23 +39,24 @@
 		<!-- Font handler. -->
 		<div style="font-family: toshiba; visibility: hidden">.</div>
 		<script>
-			const firebase = new Firebase(
-				'https://levelup-b0b68-default-rtdb.firebaseio.com/'
-			);
+			// const firebase = new Firebase(
+			// 	'https://levelup-b0b68-default-rtdb.firebaseio.com/'
+			// );
 
-			function save() {
-				let newScore = {};
-				newScore.score = document.getElementById('score').value;
+			// function save() {
+			// 	let newScore = {};
+			// 	newScore.score = document.getElementById('score').value;
 
-				firebase.push(newScore);
-			}
+			// 	firebase.push(newScore);
+			// }
 
-			firebase.on('child_added', function (data) {
-				childScore = data.val();
-				document.getElementById('list').innerHTML +=
-					childScore.score + '<br>';
-			});
+			// firebase.on('child_added', function (data) {
+			// 	childScore = data.val();
+			// 	document.getElementById('list').innerHTML +=
+			// 		childScore.score + '<br>';
+			// });
 		</script>
+		<script src="src/firebase.js"></script>
 		<script src="build/project.bundle.js" charset="utf-8"></script>
 	</body>
 </html>
