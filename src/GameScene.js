@@ -20,7 +20,6 @@ class GameScene extends Scene {
 	preload() {
 		this.load.image('ball', 'assets/ball.png');
 		this.load.image('pauseButton', 'assets/button.png');
-		this.load.image('resumeButton', 'assets/button.png');
 		this.load.image('muteButton', 'assets/button.png');
 		this.load.image('brick', 'assets/brick.png');
 		this.load.image('paddle', 'assets/paddle.png');
@@ -157,11 +156,15 @@ class GameScene extends Scene {
 
 	pauseResumeToggle() {
 		this.pauseButton = this.physics.add
-			.image(700, 550, 'pauseButton')
+			.image(700, 570, 'pauseButton')
 			.setScale(0.5);
 	}
 
-	audioToggle() {}
+	audioToggle() {
+		this.muteButton = this.physics.add
+			.image(750, 570, 'muteButton')
+			.setScale(0.5);
+	}
 
 	createPaddle() {
 		//	this.paddle = this.physics.add.image(400, 530, 'paddle');
