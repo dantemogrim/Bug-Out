@@ -1,38 +1,78 @@
-import Phaser, { Scene } from "phaser";
-import globals from "./globals/index";
-import { clone } from "lodash";
+'use strict';
+
+import Phaser, { Scene } from 'phaser';
 
 class GameOverScene extends Scene {
-  constructor() {
-    super("gameOver"); // super({ key: "preload" });
-  }
+	constructor() {
+		super('gameOver');
 
-  preload() {}
+		this.score;
+		this.length;
+	}
 
-  create() {
-    this.add.text(20, 20, `score: ${globals.score}`);
-    this.add.text(300, 20, `level: ${globals.level}`);
-    this.add.text(660, 20, `lives: ${globals.lives}`);
+	preload() {
+		this.load.spritesheet('particle', 'assets/bugs.png', {
+			frameWidth: 16,
+			frameHeight: 16,
+		});
+	}
 
-    this.gameOverText = this.add.text(400, 300, "Game Over", {
-      fontSize: "64px",
-      fill: "#000",
-    });
-    this.gameOverText.setOrigin(0.5);
+	create() {
+		this.cameras.main.setBackgroundColor(0xffffff);
 
-    this.highScoreInput = this.add.text(
-      400,
-      400,
-      `You have reached the high score!\nYour final score was: ${globals.score}.\nPlease add your name below to submit:`,
-      {
-        fontSize: "24px",
-        fill: "#000",
-      }
-    );
-    this.highScoreInput.setOrigin(0.5);
+		// ====================================================================================
 
-    this.input.on("pointerdown", () => this.scene.start("preload"));
-  }
+		this.upperText = this.add.text(
+			400,
+			400,
+			'CREDENTIALS:\n\nASEEL MOHAMAD\n\nDANTE MOGRIM\n\n2021',
+			{
+				fontFamily: 'toshiba',
+				fontSize: '20px',
+				fill: '#424242',
+				align: 'center',
+			}
+		);
+		this.upperText.setOrigin(0.5);
+
+		// ====================================================================================
+
+		this.gameOverText = this.add.text(400, 120, 'GAME OVER', {
+			fontFamily: 'toshiba',
+			fontSize: '64px',
+			fill: '#000',
+		});
+		this.gameOverText.setOrigin(0.5);
+		// TO DO: ADD BLINKING TEXT TO HIGH SCORE AND EMITTER FROM PRELOADER TO GAME OVER
+		this.highScoreInput = this.add.text(
+			400,
+			220,
+			'YOU HAVE REACHED THE HIGH SCORE!\n\nSTATE YOUR NAME BELOW TO SUBMIT.',
+			{ fontFamily: 'toshiba', fontSize: '24px', fill: '#000' }
+		);
+		this.highScoreInput.setOrigin(0.5);
+
+		// ====================================================================================
+
+		this.input.on('pointerdown', () => this.scene.start('preload'));
+
+		// BACKGROUND EMITTER TEST 2
+		this.group = this.add.group();
+		for (let i = 0; i < 32; i++) {
+			this.group.create(i * 32, i * 2, 'particle');
+			this.group.setBlendMode(Phaser.ADD);
+		}
+	}
+
+	update() {
+		// TEST 2
+		Phaser.Actions.RotateAroundDistance(
+			this.group.getChildren(),
+			{ x: 400, y: 400 },
+			0.01,
+			130
+		);
+	}
 }
 
 export default GameOverScene;

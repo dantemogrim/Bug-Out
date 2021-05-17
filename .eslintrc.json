@@ -1,0 +1,24 @@
+{
+	"env": {
+		"browser": true,
+		"es2021": true,
+		"es6": true
+	},
+	"extends": "eslint:recommended",
+	"parserOptions": {
+		"ecmaVersion": 12,
+		"sourceType": "module"
+	},
+	"ignorePatterns": [
+		"build/project.bundle.js",
+		"node_modules",
+		"package-lock.json"
+	],
+	"rules": {
+		"camelcase": 1,
+		"eqeqeq": ["error", "smart"],
+		"no-multi-spaces": 1,
+		"no-trailing-spaces": 1,
+		"quotes": [1, "single"]
+	}
+}
