@@ -1,6 +1,6 @@
 'use strict';
 
-import Phaser, { Scene } from 'phaser';
+import { Scene } from 'phaser';
 
 class ControlsScene extends Scene {
 	constructor() {
@@ -22,7 +22,7 @@ class ControlsScene extends Scene {
 		this.highScoreInput = this.add.text(
 			400,
 			300,
-			'MOVE LEFT: LEFT ARROW / \n\nMOVE RIGHT: RIGHT ARROW / \n\nRELEASE BALL: SPACE\n\nPAUSE: X',
+			'MOVE LEFT: A / LEFT ARROW \n\nMOVE RIGHT: D / RIGHT ARROW \n\nRELEASE BALL: W / SPACEBAR\n\nPAUSE: X',
 			{ fontFamily: 'toshiba', fontSize: '24px', fill: '#000' }
 		);
 		this.highScoreInput.setOrigin(0.5);
