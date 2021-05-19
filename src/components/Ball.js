@@ -1,7 +1,5 @@
 'use strict';
 
-import Phaser, { Scene } from 'phaser';
-
 class Ball {
 	constructor(game) {
 		this.game = game;

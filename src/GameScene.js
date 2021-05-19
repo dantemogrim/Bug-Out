@@ -1,8 +1,10 @@
 'use strict';
 
-import Phaser, { Scene } from 'phaser';
+import { Scene } from 'phaser';
 // import { saveScoreInDatabase } from './firebase.js';
 import Ball from './components/Ball';
+import Brick from './components/Brick';
+import Paddle from './components/Paddle';
 
 class GameScene extends Scene {
 	constructor() {
@@ -15,21 +17,28 @@ class GameScene extends Scene {
 		this.x = 800;
 		this.y = 600;
 		this.level = 1;
-		this.lives = 5;
+		this.lives = 3;
 		this.score = 0;
 		this.ball = new Ball(this);
+		this.brick = new Brick(this);
+		this.paddle = new Paddle(this);
 	}
 
 	preload() {
 		this.ball.preload();
-		this.load.image('pauseButton', 'assets/button.png');
-		this.load.image('muteButton', 'assets/button.png');
-		this.load.image('brick', 'assets/brick.png');
-		this.load.image('paddle', 'assets/paddle.png');
-		this.load.spritesheet('paddleMap', 'assets/paddle-map.png', {
-			frameWidth: 60,
-			frameHeight: 20,
+		this.brick.preload();
+		this.paddle.preload();
+
+		this.load.spritesheet('audioMuteButton', 'assets/audio-mute.png', {
+			frameWidth: 16,
+			frameHeight: 16,
 		});
+
+		this.load.spritesheet('playPauseButton', 'assets/play-pause.png', {
+			frameWidth: 16,
+			frameHeight: 16,
+		});
+
 		this.load.spritesheet('explosion', 'assets/explosion.png', {
 			frameWidth: 50,
 			frameHeight: 50,
@@ -42,54 +51,49 @@ class GameScene extends Scene {
 
 	create() {
 		// METHODS
-		this.createSideBars();
-
-		this.createCursor();
-
-		this.ballExitScreen();
 		this.ball.create();
-		this.firebase();
+		this.brick.create();
+		this.paddle.create();
 
-		this.configBrick();
-
-		this.createPaddle();
-
+		this.audioMuteToggle();
+		this.ballExitScreen();
+		this.createCursor();
+		this.createSideBars();
 		this.levelUp();
 		this.outOfLives();
+		this.playPauseToggle();
 
-		this.pauseResumeToggle();
-
-		this.audioToggle();
-
-		// CAMERA
-		this.cameras.main.setBackgroundColor(0xffffff);
-		this.cameras.main.fadeIn(500);
-
-		// TEXTS
 		this.scoreText = this.add.text(20, 10, `SCORE: ${this.score}`, {
 			fontFamily: 'toshiba',
 			fontSize: '15px',
 			fill: '#000000',
+			key: 'score',
 		});
 
 		this.levelText = this.add.text(350, 10, `LEVEL: ${this.level}`, {
 			fontFamily: 'toshiba',
 			fontSize: '15px',
 			fill: '#000000',
+			key: 'level',
 		});
 
 		this.livesText = this.add.text(660, 10, `LIVES: ${this.lives}`, {
 			fontFamily: 'toshiba',
 			fontSize: '15px',
 			fill: '#000000',
+			key: 'lives',
 		});
+
+		// CAMERA
+		this.cameras.main.setBackgroundColor(0xffffff);
+		this.cameras.main.fadeIn(500);
 
 		// COLLIDERS
 
 		// BALL + PADDLE
 		this.physics.add.collider(
 			this.ball.object,
-			this.paddle,
+			this.paddle.object,
 			this.ballHitPaddle,
 			null,
 			this
@@ -98,7 +102,7 @@ class GameScene extends Scene {
 		// BALL + BRICK
 		this.physics.add.collider(
 			this.ball.object,
-			this.brick,
+			this.brick.object,
 			this.ballHitBrick,
 			null,
 			this
@@ -120,10 +124,6 @@ class GameScene extends Scene {
 		this.gameOverText.visible = false;
 	}
 
-	firebase() {
-		//
-	}
-
 	createSideBars() {
 		this.leftSidebar = this.physics.add.group({
 			key: 'bugs',
@@ -139,69 +139,23 @@ class GameScene extends Scene {
 	}
 
 	ballExitScreen() {
-		// if () {
-		//   console.log("Out of bounds");
-		// }
-		//   // Decrement globals.lives by 1.
-		//   //   globals.lives -= 1;
-		//   //   console.log(globals.lives);
-		//   //   let livesText = this.livesText.setText(`Lives: ${globals.lives}`);
-		// }
+		//
 	}
 
 	createCursor() {
+		//	console.log(Phaser.Input.Keyboard.KeyCodes);
 		this.cursors = this.input.keyboard.createCursorKeys();
+		this.keyA = this.input.keyboard.addKey(65);
+		this.keyD = this.input.keyboard.addKey(68);
+		this.keyW = this.input.keyboard.addKey(87);
 	}
 
-	pauseResumeToggle() {
-		this.pauseButton = this.physics.add
-			.image(700, 570, 'pauseButton')
-			.setScale(0.5);
+	playPauseToggle() {
+		//
 	}
 
-	audioToggle() {
-		this.muteButton = this.physics.add
-			.image(750, 570, 'muteButton')
-			.setScale(0.5);
-	}
-
-	createPaddle() {
-		//	this.paddle = this.physics.add.image(400, 530, 'paddle');
-		this.paddle = this.physics.add
-			.sprite(400, 550, 'paddleMap')
-			.setScale(1.5);
-		this.paddle.setCollideWorldBounds(true);
-		this.paddle.setImmovable(true);
-
-		this.anims.create({
-			key: 'left',
-			frames: this.anims.generateFrameNumbers('paddleMap', {
-				start: 0,
-				end: 0,
-			}),
-			frameRate: 10,
-			repeat: -1,
-		});
-
-		this.anims.create({
-			key: 'front',
-			frames: this.anims.generateFrameNumbers('paddleMap', {
-				start: 1,
-				end: 1,
-			}),
-			frameRate: 10,
-			repeat: -1,
-		});
-
-		this.anims.create({
-			key: 'right',
-			frames: this.anims.generateFrameNumbers('paddleMap', {
-				start: 2,
-				end: 2,
-			}),
-			frameRate: 10,
-			repeat: -1,
-		});
+	audioMuteToggle() {
+		//
 	}
 
 	ballHitPaddle(ball, paddle) {
@@ -218,36 +172,6 @@ class GameScene extends Scene {
 			diff = ball.x - paddle.x;
 			ball.body.velocity.x = 10 * diff;
 			return;
-		}
-	}
-
-	configBrick() {
-		this.brick = this.physics.add.group();
-		this.createBrick(this.brick);
-	}
-
-	createBrick() {
-		// Dynamic, changeable grid settings.
-		let brickSize = 80;
-		let numRows = 3;
-		let numCols = 8;
-		let brickSpacing = 4;
-
-		let leftSpace =
-			(800 - numCols * brickSize - numCols * brickSpacing) / 1.2;
-		let topSpace =
-			(600 - numRows * brickSize - (numRows - 1) * brickSpacing) / 3;
-
-		for (let i = 0; i < numCols; i++) {
-			for (let j = 0; j < numRows; j++) {
-				this.brick
-					.create(
-						leftSpace + i * (brickSize + brickSpacing),
-						topSpace + j * (brickSize + brickSpacing),
-						'brick'
-					)
-					.setScale(1.5);
-			}
 		}
 	}
 
@@ -275,7 +199,7 @@ class GameScene extends Scene {
 
 	// TO DO !!!
 	levelUp() {
-		if (this.brick.countActive(true) === 0) {
+		if (this.brick.object.countActive(true) === 0) {
 			this.createBrick();
 			console.log('Level up!');
 			this.level += 1;
@@ -287,11 +211,11 @@ class GameScene extends Scene {
 		if (this.lives === 0) {
 			this.physics.pause();
 			this.gameOver = true;
-			let finalScore = this.score;
+			//	let finalScore = this.score;
 			// GET SCORE DATA + LEVELS + PLAYER NAME / IMPORT FUNCTION FIREBASE
 			this.gameOverText.visible = true;
 			this.score = 0;
-			this.lives = 5;
+			this.lives = 3;
 			this.level = 1;
 			this.input.on('pointerdown', () => this.scene.start('gameOver'));
 		}
@@ -304,7 +228,7 @@ class GameScene extends Scene {
 			this.lives -= 1;
 			console.log(this.lives);
 			this.livesText.setText(`LIVES: ${this.lives}`);
-			this.ball.object.body.reset(this.paddle.x, 500);
+			this.ball.object.body.reset(this.paddle.object.x, 500);
 		}
 
 		if (this.outOfLives(this.physics.world) === true) {
@@ -314,30 +238,30 @@ class GameScene extends Scene {
 			this.levelUp();
 		} else {
 			// Paddle keys.
-			if (this.cursors.left.isDown) {
-				this.paddle.setVelocityX(-300);
-				this.paddle.anims.play('left', true);
-			} else if (this.cursors.right.isDown) {
-				this.paddle.setVelocityX(300);
-				this.paddle.anims.play('right', true);
+			if (this.cursors.left.isDown || this.keyA.isDown) {
+				this.paddle.object.setVelocityX(-300);
+				this.paddle.object.anims.play('left', true);
+			} else if (this.cursors.right.isDown || this.keyD.isDown) {
+				this.paddle.object.setVelocityX(300);
+				this.paddle.object.anims.play('right', true);
 			} else {
-				this.paddle.setVelocityX(0);
-				this.paddle.anims.play('front', true);
+				this.paddle.object.setVelocityX(0);
+				this.paddle.object.anims.play('front', true);
 			}
 
 			// Binds the ball on top of paddles position during prestart.
 			if (this.gameStart === false) {
-				this.ball.object.setX(this.paddle.x);
+				this.ball.object.setX(this.paddle.object.x);
 			}
 
 			// Release ball from paddle on space press.
-			if (this.cursors.space.isDown) {
+			if (this.cursors.space.isDown || this.keyW.isDown) {
 				this.gameStart = true;
 				this.ball.object.setVelocityY(-200);
 				this.ball.object.setAngularVelocity(-50);
 			}
 
-			// End of curly brace from the start - meant for game over / level up etc.
+			// As long as the player is alive - these will be possible.
 		}
 	}
 }
