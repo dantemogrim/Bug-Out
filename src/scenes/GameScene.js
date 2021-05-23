@@ -1,51 +1,57 @@
 'use strict';
 
 import { Scene } from 'phaser';
-// import { saveScoreInDatabase } from './firebase.js';
-import Ball from './components/Ball';
-import Brick from './components/Brick';
-import Paddle from './components/Paddle';
+import Ball from '../components/Ball';
+import Brick from '../components/Brick';
+import Paddle from '../components/Paddle';
+import Sidebars from '../components/Sidebars';
 
 class GameScene extends Scene {
 	constructor() {
 		super('game');
 
 		this.gameOver = false;
-		this.gameStart = false;
 		this.gamePause = false;
 		this.gameResume = true;
+		this.gameStart = false;
+
 		this.x = 800;
 		this.y = 600;
+
 		this.level = 1;
 		this.lives = 3;
 		this.score = 0;
+
 		this.ball = new Ball(this);
 		this.brick = new Brick(this);
 		this.paddle = new Paddle(this);
+		this.sidebars = new Sidebars(this);
 	}
 
 	preload() {
 		this.ball.preload();
 		this.brick.preload();
 		this.paddle.preload();
+		this.sidebars.preload();
 
-		this.load.spritesheet('audioMuteButton', 'assets/audio-mute.png', {
-			frameWidth: 16,
-			frameHeight: 16,
+		this.load.spritesheet('outOfLivesText', '/outOfLivesText.png', {
+			frameWidth: 281,
+			frameHeight: 64,
 		});
 
-		this.load.spritesheet('playPauseButton', 'assets/play-pause.png', {
-			frameWidth: 16,
-			frameHeight: 16,
-		});
+		// this.load.spritesheet('audioMuteButton', '/audio-mute.png', {
+		// 	frameWidth: 16,
+		// 	frameHeight: 16,
+		// });
 
-		this.load.spritesheet('explosion', 'assets/explosion.png', {
+		// this.load.spritesheet('playPauseButton', '/playPauseButton.png', {
+		// 	frameWidth: 16,
+		// 	frameHeight: 16,
+		// });
+
+		this.load.spritesheet('explosion', '/explosion.png', {
 			frameWidth: 50,
 			frameHeight: 50,
-		});
-		this.load.spritesheet('bugs', 'assets/bugs.png', {
-			frameWidth: 16,
-			frameHeight: 16,
 		});
 	}
 
@@ -54,32 +60,29 @@ class GameScene extends Scene {
 		this.ball.create();
 		this.brick.create();
 		this.paddle.create();
+		this.sidebars.create();
 
 		this.audioMuteToggle();
-		this.ballExitScreen();
 		this.createCursor();
-		this.createSideBars();
 		this.levelUp();
 		this.outOfLives();
 		this.playPauseToggle();
 
-		this.scoreText = this.add.text(20, 10, `SCORE: ${this.score}`, {
-			fontFamily: 'toshiba',
-			fontSize: '15px',
+		this.scoreText = this.add.text(20, 30, `SCORE: ${this.score}`, {
+			fontSize: '20px',
 			fill: '#000000',
 			key: 'score',
 		});
 
-		this.levelText = this.add.text(350, 10, `LEVEL: ${this.level}`, {
-			fontFamily: 'toshiba',
-			fontSize: '15px',
+		this.levelText = this.add.text(350, 30, `LEVEL: ${this.level}`, {
+			fontSize: '20px',
 			fill: '#000000',
 			key: 'level',
 		});
 
-		this.livesText = this.add.text(660, 10, `LIVES: ${this.lives}`, {
-			fontFamily: 'toshiba',
-			fontSize: '15px',
+		this.livesText = this.add.text(680, 30, `LIVES: ${this.lives}`, {
+			fontSize: '20px',
+			fontWeight: 'bold',
 			fill: '#000000',
 			key: 'lives',
 		});
@@ -108,38 +111,27 @@ class GameScene extends Scene {
 			this
 		);
 
-		// GAME OVER TEXT
-		this.gameOverText = this.add.text(
-			420,
+		// OUT OF LIVES TEXT
+		this.outOfLivesText = this.physics.add.sprite(
 			400,
-			'OUT OF LIVES!\nMOUSE CLICK TO CONTINUE',
-			{
-				fontFamily: 'toshiba',
-				fontSize: '25px',
-				fill: '#000',
-				align: 'center',
-			}
+			400,
+			'outOfLivesText'
 		);
-		this.gameOverText.setOrigin(0.5);
-		this.gameOverText.visible = false;
-	}
 
-	createSideBars() {
-		this.leftSidebar = this.physics.add.group({
-			key: 'bugs',
-			repeat: 6,
-			setXY: { x: 15, y: 100, stepY: 70 },
-		});
+		this.outOfLivesText.setOrigin(0.5);
+		this.outOfLivesText.visible = false;
 
-		this.rightSidebar = this.physics.add.group({
-			key: 'bugs',
-			repeat: 6,
-			setXY: { x: 785, y: 100, stepY: 70 },
-		});
-	}
+		// this.anims.create({
+		// 	key: 'outOfLivesTextAnimation',
+		// 	frames: this.anims.generateFrameNumbers('outOfLivesText', {
+		// 		start: 0,
+		// 		end: 2,
+		// 	}),
+		// 	frameRate: 10,
+		// 	repeat: -1,
+		// });
 
-	ballExitScreen() {
-		//
+		// this.outOfLivesText.play('outOfLivesTextAnimation');
 	}
 
 	createCursor() {
@@ -190,6 +182,7 @@ class GameScene extends Scene {
 
 		this.explosion.setTexture('explosion');
 		this.explosion.play('explosion');
+		//this.explosion.destroy(true, true);
 
 		brick.destroy(true, true);
 		this.score += 1;
@@ -197,10 +190,9 @@ class GameScene extends Scene {
 		ball.setVelocity(150, 150);
 	}
 
-	// TO DO !!!
 	levelUp() {
 		if (this.brick.object.countActive(true) === 0) {
-			this.createBrick();
+			this.createBrick(); // SOS
 			console.log('Level up!');
 			this.level += 1;
 			this.levelText.setText(`LEVEL: ${this.level}`);
@@ -211,9 +203,8 @@ class GameScene extends Scene {
 		if (this.lives === 0) {
 			this.physics.pause();
 			this.gameOver = true;
-			//	let finalScore = this.score;
-			// GET SCORE DATA + LEVELS + PLAYER NAME / IMPORT FUNCTION FIREBASE
-			this.gameOverText.visible = true;
+			this.outOfLivesText.visible = true;
+
 			this.score = 0;
 			this.lives = 3;
 			this.level = 1;
@@ -228,14 +219,13 @@ class GameScene extends Scene {
 			this.lives -= 1;
 			console.log(this.lives);
 			this.livesText.setText(`LIVES: ${this.lives}`);
-			this.ball.object.body.reset(this.paddle.object.x, 500);
+			this.ball.object.body.reset(this.paddle.object.x, 450);
 		}
 
 		if (this.outOfLives(this.physics.world) === true) {
-			// Do something...
+			// TO DO
 		} else if (this.levelUp() === true) {
 			// TO DO
-			this.levelUp();
 		} else {
 			// Paddle keys.
 			if (this.cursors.left.isDown || this.keyA.isDown) {

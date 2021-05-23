@@ -6,36 +6,44 @@ class Brick {
 	}
 
 	preload() {
-		this.game.load.image('brick', 'assets/brick.png');
+		this.game.load.spritesheet('brick', '/brick.png', {
+			frameWidth: 200,
+			frameHeight: 100,
+		});
 	}
 
 	create() {
-		this.object = this.game.physics.add.group();
+		//	this.object = this.game.physics.add.group();
 		this.createBrick(this.object);
 	}
 
 	createBrick() {
-		let objectSize = 80;
-		let numRows = 3;
-		let numCols = 8;
-		let objectSpacing = 4;
+		this.object = this.game.physics.add
+			.group({
+				key: 'brick',
+				repeat: 5,
+				setXY: { x: 265, y: 100, stepX: 100 },
+				setScale: { x: 0.4, y: 0.4 },
+			})
+			.setOrigin(2, 0.5);
 
-		let yOffset =
-			(800 - numCols * objectSize - numCols * objectSpacing) / 1.2;
-		let xOffset =
-			(600 - numRows * objectSize - (numRows - 1) * objectSpacing) / 3;
+		this.object = this.game.physics.add
+			.group({
+				key: 'brick',
+				repeat: 5,
+				setXY: { x: 265, y: 200, stepX: 100 },
+				setScale: { x: 0.4, y: 0.4 },
+			})
+			.setOrigin(2, 0.5);
 
-		for (let i = 0; i < numCols; i++) {
-			for (let j = 0; j < numRows; j++) {
-				this.object
-					.create(
-						yOffset + i * (objectSize + objectSpacing),
-						xOffset + j * (objectSize + objectSpacing),
-						'brick'
-					)
-					.setScale(1.5);
-			}
-		}
+		this.object = this.game.physics.add
+			.group({
+				key: 'brick',
+				repeat: 5,
+				setXY: { x: 265, y: 300, stepX: 100 },
+				setScale: { x: 0.4, y: 0.4 },
+			})
+			.setOrigin(2, 0.5);
 	}
 }
 

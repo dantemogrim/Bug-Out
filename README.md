@@ -1,8 +1,10 @@
+![visitors](https://visitor-badge.glitch.me/badge?page_id=dantemogrim)
+
 <img src="https://media.giphy.com/media/11GLfCXU8gLB1C/giphy.gif" width="100%">
 
 # :bug: Bug Out
 
-Your classic Breakout arcade game with a subtle twist.
+A desktop Breakout arcade game with a subtle twist.
 This time the paddle is a developer, the ball is a "hack" and the bricks are bugs in dire need of fixing.
 This was created using the [Phaser 3](https://phaser.io/) game engine.
 You can find the link to the game right [here](https://bug-out.netlify.app/).
