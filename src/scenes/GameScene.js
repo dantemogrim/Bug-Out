@@ -1,6 +1,6 @@
 'use strict';
 
-import { Scene } from 'phaser';
+import Phaser, { Scene } from 'phaser';
 import Ball from '../components/Ball';
 import Brick from '../components/Brick';
 import Paddle from '../components/Paddle';
@@ -144,6 +144,8 @@ class GameScene extends Scene {
 
 	playPauseToggle() {
 		//
+		console.log('Starting out!');
+		console.log(this.brick.object);
 	}
 
 	audioMuteToggle() {
@@ -191,11 +193,14 @@ class GameScene extends Scene {
 	}
 
 	levelUp() {
-		if (this.brick.object.countActive(true) === 0) {
-			this.createBrick(); // SOS
-			console.log('Level up!');
+		if (this.brick.object.countActive(true) === 3) {
+			console.log('level up!');
+			console.log(this.brick.object);
+
+			this.brick.create();
+
 			this.level += 1;
-			this.levelText.setText(`LEVEL: ${this.level}`);
+			this.levelText.setText(`Level: ${this.level}`);
 		}
 	}
 
@@ -213,7 +218,7 @@ class GameScene extends Scene {
 	}
 
 	update() {
-		// Lose life.
+		// Lose life
 		if (this.ball.object.y > 600) {
 			console.log('It is out there!!!!');
 			this.lives -= 1;
@@ -222,12 +227,13 @@ class GameScene extends Scene {
 			this.ball.object.body.reset(this.paddle.object.x, 450);
 		}
 
-		if (this.outOfLives(this.physics.world) === true) {
-			// TO DO
+		if (this.lives < 1) {
+			this.outOfLives();
 		} else if (this.levelUp() === true) {
-			// TO DO
+			// TO DO - levels up but flies through new bricks on level 2.
+			console.log('Time to level up!');
 		} else {
-			// Paddle keys.
+			// Paddle keys
 			if (this.cursors.left.isDown || this.keyA.isDown) {
 				this.paddle.object.setVelocityX(-300);
 				this.paddle.object.anims.play('left', true);

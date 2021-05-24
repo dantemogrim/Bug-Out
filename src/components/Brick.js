@@ -1,4 +1,6 @@
-'use strict';
+import Phaser from 'phaser';
+
+('use strict');
 
 class Brick {
 	constructor(game) {
@@ -7,43 +9,26 @@ class Brick {
 
 	preload() {
 		this.game.load.spritesheet('brick', '/brick.png', {
-			frameWidth: 200,
-			frameHeight: 100,
+			frameWidth: 120,
+			frameHeight: 60,
 		});
 	}
 
 	create() {
-		//	this.object = this.game.physics.add.group();
-		this.createBrick(this.object);
-	}
+		this.object = this.game.physics.add.group({
+			key: 'brick',
+			//	frame: [0, 1, 2, 3, 4],
+			frameQuantity: 5,
+		});
 
-	createBrick() {
-		this.object = this.game.physics.add
-			.group({
-				key: 'brick',
-				repeat: 5,
-				setXY: { x: 265, y: 100, stepX: 100 },
-				setScale: { x: 0.4, y: 0.4 },
-			})
-			.setOrigin(2, 0.5);
-
-		this.object = this.game.physics.add
-			.group({
-				key: 'brick',
-				repeat: 5,
-				setXY: { x: 265, y: 200, stepX: 100 },
-				setScale: { x: 0.4, y: 0.4 },
-			})
-			.setOrigin(2, 0.5);
-
-		this.object = this.game.physics.add
-			.group({
-				key: 'brick',
-				repeat: 5,
-				setXY: { x: 265, y: 300, stepX: 100 },
-				setScale: { x: 0.4, y: 0.4 },
-			})
-			.setOrigin(2, 0.5);
+		Phaser.Actions.GridAlign(this.object.getChildren(), {
+			width: 5,
+			height: 5,
+			cellWidth: 100,
+			cellHeight: 100,
+			x: 200,
+			y: 200,
+		});
 	}
 }
 
