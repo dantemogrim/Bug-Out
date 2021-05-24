@@ -52,6 +52,7 @@ _Prerequisites - Here you will need both a code editor and [NPM](https://formula
 -   [#20 - Setting up Ball as a class + updated Firebase testing.](https://github.com/dantemogrim/Bug-Out/pull/20/)
 -   [#21 - Updated Firebase settings + breaking down game objects into classes.](https://github.com/dantemogrim/Bug-Out/pull/21)
 -   [#22 - Improved animations & faster bundler (from Webpack to Vite).](https://github.com/dantemogrim/Bug-Out/pull/22)
+-   [#23 - Changelog updated + fixing brick bugs.](https://github.com/dantemogrim/Bug-Out/pull/23)
 
 </details>
 

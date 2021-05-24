@@ -103,13 +103,13 @@ class GameScene extends Scene {
 		);
 
 		// BALL + BRICK
-		this.physics.add.collider(
-			this.ball.object,
-			this.brick.object,
-			this.ballHitBrick,
-			null,
-			this
-		);
+		// this.physics.add.collider(
+		// 	this.ball.object,
+		// 	this.brick.object,
+		// 	this.ballHitBrick,
+		// 	null,
+		// 	this
+		// );
 
 		// OUT OF LIVES TEXT
 		this.outOfLivesText = this.physics.add.sprite(
@@ -144,8 +144,6 @@ class GameScene extends Scene {
 
 	playPauseToggle() {
 		//
-		console.log('Starting out!');
-		console.log(this.brick.object);
 	}
 
 	audioMuteToggle() {
@@ -153,7 +151,6 @@ class GameScene extends Scene {
 	}
 
 	ballHitPaddle(ball, paddle) {
-		console.log('Paddle has been hit!');
 		let diff = 0;
 
 		if (ball.x < paddle.x) {
@@ -193,14 +190,12 @@ class GameScene extends Scene {
 	}
 
 	levelUp() {
-		if (this.brick.object.countActive(true) === 3) {
-			console.log('level up!');
-			console.log(this.brick.object);
-
+		if (this.brick.object.countActive(true) === 0) {
 			this.brick.create();
 
 			this.level += 1;
 			this.levelText.setText(`Level: ${this.level}`);
+			return true;
 		}
 	}
 
@@ -220,18 +215,17 @@ class GameScene extends Scene {
 	update() {
 		// Lose life
 		if (this.ball.object.y > 600) {
-			console.log('It is out there!!!!');
 			this.lives -= 1;
-			console.log(this.lives);
+
 			this.livesText.setText(`LIVES: ${this.lives}`);
 			this.ball.object.body.reset(this.paddle.object.x, 450);
 		}
 
 		if (this.lives < 1) {
 			this.outOfLives();
-		} else if (this.levelUp() === true) {
-			// TO DO - levels up but flies through new bricks on level 2.
-			console.log('Time to level up!');
+			// TO DO -levels up but flies through new bricks on level 2.
+		} else if (this.brick.object.countActive() === 0) {
+			this.levelUp();
 		} else {
 			// Paddle keys
 			if (this.cursors.left.isDown || this.keyA.isDown) {
