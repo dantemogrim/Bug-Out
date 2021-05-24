@@ -2,7 +2,7 @@
 	"main": "src/index.js",
 	"scripts": {
 		"dev": "vite",
-		"build": "rm -r dist/ && vite build",
+		"build": "vite build",
 		"serve": "vite preview",
 		"format": "npx prettier --write .",
 		"lint": "npx eslint ."

@@ -1,5 +1,3 @@
-![visitors](https://visitor-badge.glitch.me/badge?page_id=dantemogrim)
-
 <img src="https://media.giphy.com/media/11GLfCXU8gLB1C/giphy.gif" width="100%">
 
 # :bug: Bug Out
@@ -29,7 +27,33 @@ _Prerequisites - Here you will need both a code editor and [NPM](https://formula
 
 # :snail: Changelog
 
--   [#1 - Add a link to each pull request with a descriptive line.](#1)
+<details><summary> Click here to toggle a list of all pull requests.
+</summary>
+
+-   [#1 - Testing permissions + pull request functionality.](https://github.com/dantemogrim/Bug-Out/pull/1)
+-   [#2 - Testing out PixiJS.](https://github.com/dantemogrim/Bug-Out/pull/2)
+-   [#3 - Updated README.md.](https://github.com/dantemogrim/Bug-Out/pull/3)
+-   [#4 - Webpack boiler plate + ES6.](https://github.com/dantemogrim/Bug-Out/pull/4)
+-   [#5 - Testing out Firebase.](https://github.com/dantemogrim/Bug-Out/pull/5)
+-   [#6 - Getting started with Phaser.](https://github.com/dantemogrim/Bug-Out/pull/6)
+-   [#7 - Delete package-lock.json.](https://github.com/dantemogrim/Bug-Out/pull/7)
+-   [#8 - Updating .gitignore.](https://github.com/dantemogrim/Bug-Out/pull/8)
+-   [#9 - Settings up score, level & lives.](https://github.com/dantemogrim/Bug-Out/pull/9/files)
+-   [#10 - Updated visuals.](https://github.com/dantemogrim/Bug-Out/pull/10/)
+-   [#11 - Paddle movement.](https://github.com/dantemogrim/Bug-Out/pull/11)
+-   [#12 - Ball velocity.](https://github.com/dantemogrim/Bug-Out/pull/12)
+-   [#13 - Testing HUD texts as global variables.](https://github.com/dantemogrim/Bug-Out/pull/13/files)
+-   [#14 - Game Over scene created.](https://github.com/dantemogrim/Bug-Out/pull/14)
+-   [#15 - Game Over scene functionality in GameScene.js + config.js.](https://github.com/dantemogrim/Bug-Out/pull/15)
+-   [#16 - Updated ball functionality + README.md.](https://github.com/dantemogrim/Bug-Out/pull/16)
+-   [#17 - HUD texts made dynamic and functional.](https://github.com/dantemogrim/Bug-Out/pull/17)
+-   [#18 - Integrated formatting + linting with Prettier & ESLint.](https://github.com/dantemogrim/Bug-Out/pull/18)
+-   [#19 - Testing out pause/resume & audio/mute functionality.](https://github.com/dantemogrim/Bug-Out/pull/19)
+-   [#20 - Setting up Ball as a class + updated Firebase testing.](https://github.com/dantemogrim/Bug-Out/pull/20/)
+-   [#21 - Updated Firebase settings + breaking down game objects into classes.](https://github.com/dantemogrim/Bug-Out/pull/21)
+-   [#22 - Improved animations & faster bundler (from Webpack to Vite).](https://github.com/dantemogrim/Bug-Out/pull/22)
+
+</details>
 
 # :honeybee: Code Review
 
@@ -58,7 +82,7 @@ _Tested by the following muggles (non-coders):_
 
 ## :ant: Stack
 
--   Engine: [Phaser 3](https://phaser.io/)
+-   Engine: [![Phaser 3](https://img.shields.io/badge/Phaser-V.3-teal.svg)](https://phaser.io/)
 -   Formatting: [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 -   Hosting: [![Netlify Status](https://api.netlify.com/api/v1/badges/0cb3b88c-30f3-4c4a-ad01-de12e7fb77bc/deploy-status)](https://app.netlify.com/sites/bug-out/deploys)
 
