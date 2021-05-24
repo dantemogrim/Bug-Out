@@ -1,6 +1,4 @@
-import Phaser from 'phaser';
-
-('use strict');
+'use strict';
 
 class Brick {
 	constructor(game) {
@@ -15,20 +13,44 @@ class Brick {
 	}
 
 	create() {
-		this.object = this.game.physics.add.group({
-			key: 'brick',
-			//	frame: [0, 1, 2, 3, 4],
-			frameQuantity: 5,
-		});
+		// if (this.object !== undefined) {
+		// 	console.log('Hello from bricks create class!');
+		// 	// LIGHT EM UP
+		// 	this.object.setActive(true, true);
+		// } else {
+		this.object = this.game.physics.add.group();
 
-		Phaser.Actions.GridAlign(this.object.getChildren(), {
-			width: 5,
-			height: 5,
-			cellWidth: 100,
-			cellHeight: 100,
-			x: 200,
-			y: 200,
-		});
+		let brickSize = 70;
+		let numRows = 2;
+		let numCols = 3;
+		let brickSpacing = 100;
+
+		let leftSpace =
+			(800 - numCols * brickSize - numCols * brickSpacing) / 1.5;
+
+		let topSpace =
+			(600 - numRows * brickSize - (numRows - 1) * brickSpacing) / 3;
+
+		for (let i = 0; i < numCols; i++) {
+			for (let j = 0; j < numRows; j++) {
+				this.object
+					.create(
+						leftSpace + i * (brickSize + brickSpacing),
+						topSpace + j * (brickSize + brickSpacing),
+						'brick'
+					)
+					.setOrigin(0.5)
+					.setScale(0.5);
+			}
+		}
+
+		this.game.physics.add.collider(
+			this.game.ball.object,
+			this.game.brick.object,
+			this.game.ballHitBrick,
+			null,
+			this.game
+		);
 	}
 }
 
