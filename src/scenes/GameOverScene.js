@@ -25,20 +25,13 @@ class GameOverScene extends Scene {
 	}
 
 	create() {
-		this.cameras.main.setBackgroundColor(0xffffff);
-
 		this.input.on('pointerdown', () => this.scene.start('preload'));
 
-		// ==============================================================================
-
-		// BACKGROUND EMITTER TEST 2
+		// BACKGROUND EMITTER
 		this.group = this.add.group();
 		for (let i = 0; i < 32; i++) {
 			this.group.create(i * 32, i * 2, 'fly');
-			//	this.group.setBlendMode(Phaser.BlendModes.ADD);
 		}
-
-		// ==============================================================================
 
 		// GAME OVER TITLE ANIMATION
 		this.gameOverTitle = this.physics.add.sprite(400, 100, 'gameOverTitle');
@@ -59,25 +52,11 @@ class GameOverScene extends Scene {
 
 		this.gameOverTitle.play('gameOverTitleAnimation');
 
-		// ==============================================================================
-
-		// CREDENTIALS ANIMATION
+		// CREDENTIALS
 		this.credentials = this.physics.add
 			.sprite(400, 300, 'credentials')
 			.setScale(1.5);
 		this.credentials.setOrigin(0.5);
-
-		// this.anims.create({
-		// 	key: 'credentialsAnimation',
-		// 	frames: this.credentials.anims.generateFrameNumbers('credentials', {
-		// 		start: 0,
-		// 		end: 2,
-		// 	}),
-		// 	frameRate: 6,
-		// 	repeat: -1,
-		// });
-
-		// this.credentials.play('credentialsAnimation');
 	}
 
 	update() {

@@ -13,17 +13,13 @@ class Brick {
 	}
 
 	create() {
-		// if (this.object !== undefined) {
-		// 	console.log('Hello from bricks create class!');
-		// 	// LIGHT EM UP
-		// 	this.object.setActive(true, true);
-		// } else {
 		this.object = this.game.physics.add.group();
+		this.object.enableBody = true;
 
 		let brickSize = 70;
-		let numRows = 2;
-		let numCols = 3;
-		let brickSpacing = 100;
+		let numRows = 3;
+		let numCols = 6;
+		let brickSpacing = 10;
 
 		let leftSpace =
 			(800 - numCols * brickSize - numCols * brickSpacing) / 1.5;

@@ -1,3 +1,5 @@
+'use strict';
+
 import config from './src/config';
 import { Game } from 'phaser';
 

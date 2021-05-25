@@ -49,16 +49,6 @@ class Paddle {
 			frameRate: 10,
 			repeat: -1,
 		});
-
-		this.game.anims.create({
-			key: 'error',
-			frames: this.object.anims.generateFrameNumbers('paddle', {
-				start: 3,
-				end: 3,
-			}),
-			frameRate: 10,
-			repeat: -1,
-		});
 	}
 }
 
