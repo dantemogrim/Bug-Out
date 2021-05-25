@@ -1,6 +1,6 @@
 'use strict';
 
-import Phaser, { Scene } from 'phaser';
+import { Scene } from 'phaser';
 import Ball from '../components/Ball';
 import Brick from '../components/Brick';
 import Paddle from '../components/Paddle';
@@ -11,12 +11,7 @@ class GameScene extends Scene {
 		super('game');
 
 		this.gameOver = false;
-		this.gamePause = false;
-		this.gameResume = true;
 		this.gameStart = false;
-
-		this.x = 800;
-		this.y = 600;
 
 		this.level = 1;
 		this.lives = 3;
@@ -39,16 +34,6 @@ class GameScene extends Scene {
 			frameHeight: 64,
 		});
 
-		// this.load.spritesheet('audioMuteButton', '/audio-mute.png', {
-		// 	frameWidth: 16,
-		// 	frameHeight: 16,
-		// });
-
-		// this.load.spritesheet('playPauseButton', '/playPauseButton.png', {
-		// 	frameWidth: 16,
-		// 	frameHeight: 16,
-		// });
-
 		this.load.spritesheet('explosion', '/explosion.png', {
 			frameWidth: 50,
 			frameHeight: 50,
@@ -62,11 +47,9 @@ class GameScene extends Scene {
 		this.paddle.create();
 		this.sidebars.create();
 
-		this.audioMuteToggle();
 		this.createCursor();
 		this.levelUp();
 		this.outOfLives();
-		this.playPauseToggle();
 
 		this.scoreText = this.add.text(20, 30, `SCORE: ${this.score}`, {
 			fontSize: '20px',
@@ -88,12 +71,9 @@ class GameScene extends Scene {
 		});
 
 		// CAMERA
-		this.cameras.main.setBackgroundColor(0xffffff);
 		this.cameras.main.fadeIn(500);
 
-		// COLLIDERS
-
-		// BALL + PADDLE
+		// BALL + PADDLE COLLISION
 		this.physics.add.collider(
 			this.ball.object,
 			this.paddle.object,
@@ -101,15 +81,6 @@ class GameScene extends Scene {
 			null,
 			this
 		);
-
-		// BALL + BRICK
-		// this.physics.add.collider(
-		// 	this.ball.object,
-		// 	this.brick.object,
-		// 	this.ballHitBrick,
-		// 	null,
-		// 	this
-		// );
 
 		// OUT OF LIVES TEXT
 		this.outOfLivesText = this.physics.add.sprite(
@@ -120,38 +91,19 @@ class GameScene extends Scene {
 
 		this.outOfLivesText.setOrigin(0.5);
 		this.outOfLivesText.visible = false;
-
-		// this.anims.create({
-		// 	key: 'outOfLivesTextAnimation',
-		// 	frames: this.anims.generateFrameNumbers('outOfLivesText', {
-		// 		start: 0,
-		// 		end: 2,
-		// 	}),
-		// 	frameRate: 10,
-		// 	repeat: -1,
-		// });
-
-		// this.outOfLivesText.play('outOfLivesTextAnimation');
 	}
 
 	createCursor() {
-		//	console.log(Phaser.Input.Keyboard.KeyCodes);
 		this.cursors = this.input.keyboard.createCursorKeys();
 		this.keyA = this.input.keyboard.addKey(65);
 		this.keyD = this.input.keyboard.addKey(68);
 		this.keyW = this.input.keyboard.addKey(87);
 	}
 
-	playPauseToggle() {
-		//
-	}
-
-	audioMuteToggle() {
-		//
-	}
-
 	ballHitPaddle(ball, paddle) {
 		let diff = 0;
+
+		ball.setVelocityY(-200);
 
 		if (ball.x < paddle.x) {
 			diff = paddle.x - ball.x;
@@ -181,12 +133,11 @@ class GameScene extends Scene {
 
 		this.explosion.setTexture('explosion');
 		this.explosion.play('explosion');
-		//this.explosion.destroy(true, true);
 
 		brick.destroy(true, true);
 		this.score += 1;
 		this.scoreText.setText(`SCORE: ${this.score}`);
-		ball.setVelocity(150, 150);
+		ball.setVelocity(200, 200);
 	}
 
 	levelUp() {
@@ -195,7 +146,6 @@ class GameScene extends Scene {
 
 			this.level += 1;
 			this.levelText.setText(`Level: ${this.level}`);
-			return true;
 		}
 	}
 
@@ -205,15 +155,16 @@ class GameScene extends Scene {
 			this.gameOver = true;
 			this.outOfLivesText.visible = true;
 
+			// Reset stats for game restart.
 			this.score = 0;
 			this.lives = 3;
 			this.level = 1;
+
 			this.input.on('pointerdown', () => this.scene.start('gameOver'));
 		}
 	}
 
 	update() {
-		// Lose life
 		if (this.ball.object.y > 600) {
 			this.lives -= 1;
 
@@ -223,35 +174,31 @@ class GameScene extends Scene {
 
 		if (this.lives < 1) {
 			this.outOfLives();
-			// TO DO -levels up but flies through new bricks on level 2.
 		} else if (this.brick.object.countActive() === 0) {
 			this.levelUp();
 		} else {
-			// Paddle keys
 			if (this.cursors.left.isDown || this.keyA.isDown) {
-				this.paddle.object.setVelocityX(-300);
+				this.paddle.object.setVelocityX(-400);
 				this.paddle.object.anims.play('left', true);
 			} else if (this.cursors.right.isDown || this.keyD.isDown) {
-				this.paddle.object.setVelocityX(300);
+				this.paddle.object.setVelocityX(400);
 				this.paddle.object.anims.play('right', true);
 			} else {
 				this.paddle.object.setVelocityX(0);
 				this.paddle.object.anims.play('front', true);
 			}
 
-			// Binds the ball on top of paddles position during prestart.
+			// Binds the ball on top of paddles position during prestart or lost life.
 			if (this.gameStart === false) {
 				this.ball.object.setX(this.paddle.object.x);
 			}
 
-			// Release ball from paddle on space press.
+			// Release ball from paddle on space press or 'w'.
 			if (this.cursors.space.isDown || this.keyW.isDown) {
 				this.gameStart = true;
 				this.ball.object.setVelocityY(-200);
 				this.ball.object.setAngularVelocity(-50);
 			}
-
-			// As long as the player is alive - these will be possible.
 		}
 	}
 }

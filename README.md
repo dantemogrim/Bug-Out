@@ -2,12 +2,14 @@
 
 # :bug: Bug Out
 
-A desktop Breakout arcade game with a subtle twist.
+A Breakout arcade game with a subtle twist.
 This time the paddle is a developer, the ball is a "hack" and the bricks are bugs in dire need of fixing.
 This was created using the [Phaser 3](https://phaser.io/) game engine.
 You can find the link to the game right [here](https://bug-out.netlify.app/).
 
 Go get 'em and good luck!
+
+_Nota bene: This game is set up for desktop usage and the game stats are fully functional on any browser except for Brave._
 
 # :beetle: Installation
 
@@ -53,6 +55,7 @@ _Prerequisites - Here you will need both a code editor and [NPM](https://formula
 -   [#21 - Updated Firebase settings + breaking down game objects into classes.](https://github.com/dantemogrim/Bug-Out/pull/21)
 -   [#22 - Improved animations & faster bundler (from Webpack to Vite).](https://github.com/dantemogrim/Bug-Out/pull/22)
 -   [#23 - Changelog updated + fixing brick bugs.](https://github.com/dantemogrim/Bug-Out/pull/23)
+-   [#24 - Level bug + create bricks fixed.](https://github.com/dantemogrim/Bug-Out/pull/24)
 
 </details>
 
@@ -72,9 +75,9 @@ _Tested by the following people:_
 _Tested by the following muggles (non-coders):_
 
 1. Miranda Samuelsson
-2. John Doe
-3. Jane Doe
-4. John Doe
+2. Wissam Abuajwa
+3. Ali Mohamad
+4. Axel Erlandsson
 
 ## :unicorn: Creators
 

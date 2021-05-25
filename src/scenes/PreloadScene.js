@@ -8,8 +8,6 @@ class PreloadScene extends Scene {
 	}
 
 	preload() {
-		this.load.audio('introTune', '/music/menu.mp3');
-
 		this.load.image('logo', '/logo.png');
 		this.load.image('fly', '/fly.png');
 		this.load.spritesheet('startButton', '/startButton.png', {
@@ -23,11 +21,6 @@ class PreloadScene extends Scene {
 	}
 
 	create() {
-		// INTRO TUNE
-		// this.introTune = this.sound.add('introTune');
-		// this.sound.play('introTune');
-		// this.introTune.setLoop(true);
-
 		// BACKGROUND EMITTER
 		this.fly = this.add.particles('fly');
 		this.emitter = this.fly.createEmitter({
@@ -36,7 +29,6 @@ class PreloadScene extends Scene {
 		});
 		this.emitter.setPosition(400, 250);
 		this.emitter.setSpeed(200);
-		//this.emitter.setBlendMode(Phaser.BlendModes.ADD);
 
 		// LOGO
 		this.logo = this.add.image(400, 200, 'logo').setScale(1);
