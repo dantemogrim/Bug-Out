@@ -61,7 +61,16 @@ _Prerequisites - Here you will need both a code editor and [NPM](https://formula
 
 # :honeybee: Code Review
 
-1. `example.js:10-15` - Remember to think about X and this could be refactored using the amazing Y function.
+1. Think about SRP, in scenes, i.e, you might wanna create a createControllButton, createStartButton method in PreloadScene and call those methods from within the create method.
+2. `GameScene.js:167-204` The update method in GameScene has a very high amount of control statements, think about abstracting these out to separate methods to reduce code complexity and make debugging easier.
+3. `Sidebars.js:13` In the Sidebars class, you have repeat set to 6 in every config object, you might wanna make a const for that and use that variable to make refactoring easier incase you wanted to change the repeats number to something else.
+4. `GameScene.js: 140` Forces to ball to always go down to the right, you might wanna this makes the ball not being able to bounce up if hitting brick from upside down, might wanna adjust these values.
+5. `GameScene.js:108-118` When the first if-statement is false, the second case will always be true. Therefore the second if-statement is redundant.
+6. `Ball.js:21`: Might not wanna have two multiline comments inside the function call.
+7. `Paddle.js:19` Your paddle is more of a rectangular shape, but you have givent it a circular hitbox. Why is that?
+8. `Brick.js:19-22` Might wanna wanna use more const's instead of lets when you have properties that will not change, to prevent accidental mutations from other parts of your code.
+9. `SideBars.js:13-35` Triple assignment feels redundant, the last assignment to this.object should probably take preceedence over the earlier once, thus making the earlier assignments redundant.
+10. Very nice illustrations, makes the game feel very unique.
 
 # :space_invader: Testers
 
