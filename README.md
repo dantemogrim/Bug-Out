@@ -67,10 +67,10 @@ _Prerequisites - Here you will need both a code editor and [NPM](https://formula
 
 _Tested by the following people:_
 
-1. Jane Doe
-2. John Doe
-3. Jane Doe
-4. John Doe
+1. Simon Lindstedt
+2. Amanda Fager
+3. Marcel Branleur
+4. Julia K. Lindstedt
 
 _Tested by the following muggles (non-coders):_
 
