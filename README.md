@@ -9,7 +9,7 @@ You can find the link to the game right [here](https://bug-out.netlify.app/).
 
 Go get 'em and good luck!
 
-_Nota bene: This game is set up for desktop usage and the game stats are fully functional on any browser except for Brave._
+_Note: This game is set up for desktop usage on any browser except Brave._
 
 # :beetle: Installation
 
