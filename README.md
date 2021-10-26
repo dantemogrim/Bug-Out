@@ -11,7 +11,7 @@ Go get 'em and good luck!
 
 _Note: This game is set up for desktop usage on any browser except Brave._
 
-# :beetle: Installation
+## :beetle: Installation
 
 _Opt. 1:_ Access the project live through [this link](https://bug-out.netlify.app/).
 
@@ -27,7 +27,7 @@ _Prerequisites - Here you will need both a code editor and [NPM](https://formula
 5. Your CLI should now have kick started a localhost for you, on your browser. You can access the project from there. In your browser's URL type `http://localhost:1337/`, then you should be good to go. Have fun!
  </details>
 
-# :snail: Changelog
+## :snail: Changelog
 
 <details><summary> Click here to toggle a list of all pull requests.
 </summary>
@@ -59,7 +59,7 @@ _Prerequisites - Here you will need both a code editor and [NPM](https://formula
 
 </details>
 
-# :honeybee: Code Review
+## :honeybee: Code Review
 
 1. Think about SRP, in scenes, i.e, you might wanna create a createControllButton, createStartButton method in PreloadScene and call those methods from within the create method.
 2. `GameScene.js:167-204` The update method in GameScene has a very high amount of control statements, think about abstracting these out to separate methods to reduce code complexity and make debugging easier.
@@ -72,7 +72,7 @@ _Prerequisites - Here you will need both a code editor and [NPM](https://formula
 9. `SideBars.js:13-35` Triple assignment feels redundant, the last assignment to this.object should probably take preceedence over the earlier once, thus making the earlier assignments redundant.
 10. Very nice illustrations, makes the game feel very unique.
 
-# :space_invader: Testers
+## :space_invader: Testers
 
 _Tested by the following people:_
 
